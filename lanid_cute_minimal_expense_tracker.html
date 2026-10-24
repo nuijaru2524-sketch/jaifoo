@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>น้องใจฟู - บันทึกการเงินและพูดแล้วจด</title>
+  
+  <!-- Favicon and App Icons for Mobile Home Screen -->
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="manifest" href="manifest.json">
+  
+  <!-- Apple Mobile Web App Meta -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="น้องใจฟู">
+  <meta name="theme-color" content="#5C9C82">
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <!-- Google Fonts: Itim & Prompt -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Itim&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js for beautiful graphs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- SheetJS (xlsx) for exporting to Excel -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            itim: ['Itim', 'cursive', 'sans-serif'],
+            prompt: ['Prompt', 'sans-serif'],
+          },
+          colors: {
+            sage: {
+              50: '#F4F7F4',
+              100: '#E4EFE7',
+              200: '#C8DEC9',
+              300: '#A7D7C5',
+              400: '#74B49B',
+              500: '#5C9C82',
+              600: '#477C67',
+            },
+            warmOrange: {
+              50: '#FFF9F2',
+              100: '#FFEEDD',
+              200: '#FFD7B0',
+              300: '#FFB871',
+              400: '#FF9F43',
+              500: '#FF8A5C',
+              600: '#EE5253',
+            },
+            creamy: '#FBF9F5',
+          },
+          boxShadow: {
+            'cute': '0 10px 25px -4px rgba(92, 156, 130, 0.14), 0 4px 12px -2px rgba(255, 159, 67, 0.12)',
+            'bubble': '0 10px 24px -2px rgba(255, 138, 92, 0.35)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Prompt', sans-serif;
+      background-color: #FBF9F5;
+      background-image: radial-gradient(#d3e3d6 1.4px, transparent 1.4px);
+      background-size: 22px 22px;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    .mascot-breathe {
+      animation: gentleFloat 3s ease-in-out infinite;
+      transform-origin: bottom center;
+    }
+
+    .mascot-bounce {
+      animation: heartBounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .mascot-listening {
+      animation: listeningPulse 1.2s ease-in-out infinite alternate;
+    }
+
+    @keyframes heartBounce {
+      0% { transform: scale(1); }
+      35% { transform: scale(1.18, 0.82) translateY(-10px); }
+      60% { transform: scale(0.92, 1.08) translateY(-4px); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes gentleFloat {
+      0%, 100% { transform: translateY(0px) scale(1, 1); }
+      50% { transform: translateY(-5px) scale(1.02, 0.98); }
+    }
+
+    @keyframes listeningPulse {
+      0% { transform: translateY(0) scale(1); }
+      100% { transform: translateY(-8px) scale(1.06); }
+    }
+
+    .sprout-wiggle {
+      animation: sproutSway 3.2s ease-in-out infinite;
+      transform-origin: 50% 90%;
+    }
+
+    .sprout-hyper {
+      animation: sproutFast 0.4s ease-in-out infinite alternate !important;
+      transform-origin: 50% 90%;
+    }
+
+    @keyframes sproutSway {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-7deg); }
+      75% { transform: rotate(7deg); }
+    }
+
+    @keyframes sproutFast {
+      0% { transform: rotate(-16deg) scale(1.1); }
+      100% { transform: rotate(16deg) scale(1.1); }
+    }
+
+    /* Soundwave bars animation */
+    .sound-bar {
+      animation: soundWave 0.9s ease-in-out infinite alternate;
+    }
+    .sound-bar:nth-child(1) { animation-delay: 0.1s; }
+    .sound-bar:nth-child(2) { animation-delay: 0.3s; }
+    .sound-bar:nth-child(3) { animation-delay: 0.2s; }
+    .sound-bar:nth-child(4) { animation-delay: 0.4s; }
+    .sound-bar:nth-child(5) { animation-delay: 0.15s; }
+
+    @keyframes soundWave {
+      0% { height: 6px; }
+      100% { height: 26px; }
+    }
+
+    .cute-scroll::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .cute-scroll::-webkit-scrollbar-thumb {
+      background: #C8DEC9;
+      border-radius: 999px;
+    }
+    .cute-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .modal-enter {
+      animation: popIn 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.92) translateY(18px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* Pulse for recording */
+    @keyframes pulseRing {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 142, 83, 0.6); }
+      70% { transform: scale(1); box-shadow: 0 0 0 16px rgba(255, 142, 83, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 142, 83, 0); }
+    }
+    .mic-recording {
+      animation: pulseRing 1.5s infinite;
+      background: linear-gradient(135deg, #FF7675, #FF9F43) !important;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-stone-700 flex flex-col justify-between items-center pb-28 pt-3 px-3 sm:px-4">
+
+  <!-- Mobile Wrapper Frame -->
+  <div class="w-full max-w-md mx-auto flex flex-col gap-3.5">
+
+    <!-- Top Navigation Header -->
+    <header class="flex items-center justify-between px-2 pt-1">
+      <div class="flex items-center gap-2.5">
+        <div class="w-11 h-11 rounded-2xl bg-white shadow-sm flex items-center justify-center border border-sage-200 overflow-hidden">
+          <img src="icon.svg" alt="น้องใจฟู Logo" class="w-9 h-9 object-contain" onerror="this.outerHTML='<span class=\'text-2xl\'>🌱</span>'">
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <h1 class="font-itim text-2xl font-bold text-stone-800 tracking-wide">น้องใจฟู</h1>
+            <span class="text-[11px] font-semibold bg-sage-100 text-sage-600 px-2 py-0.5 rounded-full border border-sage-200">
+              🎙️ พูดแล้วจด
+            </span>
+          </div>
+          <p class="text-xs text-stone-400">บันทึกวันละนิด การเงินใจฟู~</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <!-- Excel Export Button -->
+        <button onclick="exportToExcel()" title="ดาวน์โหลดเป็นไฟล์ Excel" class="px-2.5 py-1.5 text-stone-600 hover:text-emerald-700 active:scale-95 transition bg-white hover:bg-emerald-50 rounded-2xl border border-sage-200 shadow-sm text-xs flex items-center gap-1.5 font-semibold">
+          <i data-lucide="file-spreadsheet" class="w-4 h-4 text-emerald-600"></i>
+          <span class="text-[11px] text-emerald-700">Excel</span>
+        </button>
+        <!-- Mute/Unmute Speech Voice -->
+        <button onclick="toggleVoiceOutputMute()" id="muteBtn" title="เปิด/ปิดเสียงน้องใจฟู" class="p-2 text-stone-500 hover:text-stone-700 active:scale-95 transition bg-white rounded-full border border-sage-200 shadow-sm text-xs flex items-center">
+          <i data-lucide="volume-2" id="muteIcon" class="w-4 h-4 text-sage-500"></i>
+        </button>
+        <!-- Reset Data -->
+        <button onclick="resetDemoData()" title="รีเซ็ตข้อมูลตัวอย่าง" class="p-2 text-stone-500 hover:text-stone-700 active:scale-95 transition bg-white rounded-full border border-sage-200 shadow-sm text-xs flex items-center">
+          <i data-lucide="rotate-ccw" class="w-4 h-4 text-warmOrange-400"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Quick Voice Instruction Bar -->
+    <div class="bg-warmOrange-50/90 border border-warmOrange-200/90 rounded-2xl px-3.5 py-2 flex items-center justify-between text-xs text-warmOrange-600 shadow-xs">
+      <div class="flex items-center gap-2 truncate">
+        <span class="flex-shrink-0 animate-bounce">💬</span>
+        <span class="truncate">พูดได้เลย เช่น <strong class="text-warmOrange-500 font-semibold">"กินข้าว 60 บาท"</strong> หรือ <strong class="text-sage-600 font-semibold">"เงินเดือน 30000"</strong></span>
+      </div>
+      <button onclick="simulateVoiceTest()" title="ลองข้อความตัวอย่าง" class="flex-shrink-0 ml-1 text-[11px] bg-white border border-warmOrange-200 text-warmOrange-500 px-2 py-0.5 rounded-lg font-medium hover:bg-warmOrange-100 transition">
+        ลองพูด
+      </button>
+    </div>
+
+    <!-- Mascot Banner with Interactive Mood Bubble & Voice State -->
+    <section class="bg-gradient-to-b from-white via-creamy to-sage-50/80 p-4 rounded-3xl border border-sage-200 shadow-cute relative overflow-hidden">
+      <!-- Decorative background pastel blobs -->
+      <div class="absolute -top-10 -right-8 w-28 h-28 bg-warmOrange-100/60 rounded-full blur-2xl pointer-events-none"></div>
+      <div class="absolute -bottom-6 -left-6 w-24 h-24 bg-sage-200/50 rounded-full blur-xl pointer-events-none"></div>
+      
+      <div class="flex items-center gap-3.5 relative z-10">
+        <!-- Animated SVG Mascot "น้องใจฟูเวอร์ชันมหาเศรษฐีอ้วนกลม" -->
+        <div id="mascotWrapper" class="relative flex-shrink-0 cursor-pointer mascot-breathe" onclick="pokeMascot()" title="แตะตัวน้องใจฟูรับพลังความรวย!">
+          <svg width="112" height="122" viewBox="0 0 170 190" fill="none" xmlns="http://www.w3.org/2000/svg" class="drop-shadow-md select-none">
+            <defs>
+              <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FFEAA7"/>
+                <stop offset="50%" stop-color="#FDCB6E"/>
+                <stop offset="100%" stop-color="#E17055"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Ground Shadow under mascot -->
+            <ellipse cx="85" cy="176" rx="60" ry="9" fill="#74B49B" fill-opacity="0.2"/>
+
+            <!-- Floating Money Particles in Background -->
+            <g class="animate-bounce" style="animation-duration: 2.2s;">
+              <rect x="18" y="32" width="22" height="12" rx="2.5" fill="#A7D7C5" stroke="#477C67" stroke-width="1.5" transform="rotate(-18 18 32)"/>
+              <circle cx="27" cy="40" r="2" fill="#5C9C82"/>
+            </g>
+            <g class="animate-bounce" style="animation-duration: 2.8s;">
+              <circle cx="142" cy="38" r="8.5" fill="url(#goldGrad)" stroke="#D35400" stroke-width="1.8"/>
+              <text x="142" y="42" font-size="9" font-weight="bold" fill="#B33939" text-anchor="middle" font-family="'Prompt', sans-serif">฿</text>
+            </g>
+
+            <!-- Sprout on Head (with mini Gold Crown) -->
+            <g id="mascotSprout" class="sprout-wiggle">
+              <path d="M85 46 C 85 28, 65 18, 59 24 C 53 30, 65 44, 82 44" fill="#74B49B" stroke="#477C67" stroke-width="3" stroke-linejoin="round"/>
+              <path d="M85 46 C 85 26, 103 14, 111 21 C 119 28, 105 44, 88 44" fill="#A7D7C5" stroke="#477C67" stroke-width="3" stroke-linejoin="round"/>
+              <path d="M85 48 L85 39" stroke="#477C67" stroke-width="4" stroke-linecap="round"/>
+              
+              <!-- Mini Royal Crown -->
+              <path d="M73 22 L77 28 L85 19 L93 28 L97 22 L95 32 L75 32 Z" fill="url(#goldGrad)" stroke="#B33939" stroke-width="1.8" stroke-linejoin="round"/>
+              <circle cx="73" cy="21" r="1.5" fill="#E74C3C"/>
+              <circle cx="85" cy="18" r="1.8" fill="#E74C3C"/>
+              <circle cx="97" cy="21" r="1.5" fill="#E74C3C"/>
+            </g>
+
+            <!-- Chubby Mascot Body -->
+            <path d="M85 42 C135 42 154 75 154 114 C154 156 130 174 85 174 C40 174 16 156 16 114 C16 75 35 42 85 42 Z" fill="#FFFDF5" stroke="#E6D3B8" stroke-width="4.5"/>
+            
+            <!-- Blush -->
+            <ellipse cx="45" cy="108" rx="10.5" ry="7" fill="#FF7675" fill-opacity="0.6"/>
+            <ellipse cx="125" cy="108" rx="10.5" ry="7" fill="#FF7675" fill-opacity="0.6"/>
+
+            <!-- Sparkly Eyes -->
+            <g id="mascotEyes">
+              <circle cx="58" cy="99" r="5.5" fill="#3E342D"/>
+              <circle cx="56" cy="96.5" r="2.2" fill="#FFFFFF"/>
+              <circle cx="59.8" cy="100.5" r="1" fill="#FFFFFF"/>
+              <circle cx="112" cy="99" r="5.5" fill="#3E342D"/>
+              <circle cx="110" cy="96.5" r="2.2" fill="#FFFFFF"/>
+              <circle cx="113.8" cy="100.5" r="1" fill="#FFFFFF"/>
+            </g>
+
+            <!-- Mouth -->
+            <path id="mascotMouth" d="M78 107 Q85 116 92 107" stroke="#3E342D" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+
+            <!-- Money Bag hugged by mascot -->
+            <g id="mascotMoneyBag">
+              <ellipse cx="94" cy="143" rx="34" ry="26" fill="url(#goldGrad)" stroke="#D35400" stroke-width="3"/>
+              <path d="M84 121 C89 124 99 124 104 121 L108 114 L80 114 Z" fill="#F39C12" stroke="#D35400" stroke-width="2.5"/>
+              <ellipse cx="94" cy="122" rx="11" ry="3.5" fill="#E74C3C"/>
+              <path d="M91 124 Q87 131 84 135" stroke="#C0392B" stroke-width="3" stroke-linecap="round"/>
+              <path d="M97 124 Q101 131 104 135" stroke="#C0392B" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="94" cy="144" r="13" fill="#FFF9E6" stroke="#D35400" stroke-width="2"/>
+              <text x="94" y="150" font-size="15" font-weight="bold" fill="#D35400" text-anchor="middle" font-family="'Prompt', sans-serif">฿</text>
+            </g>
+
+            <!-- Chubby Arms -->
+            <ellipse cx="44" cy="132" rx="11" ry="17" transform="rotate(-40 44 132)" fill="#FFF9E8" stroke="#E6D3B8" stroke-width="3.5"/>
+            <ellipse cx="134" cy="135" rx="10" ry="14" transform="rotate(25 134 135)" fill="#FFF9E8" stroke="#E6D3B8" stroke-width="3.5"/>
+
+            <!-- Sparkles -->
+            <path d="M26 84 L29 78 L32 84 L38 87 L32 90 L29 96 L26 90 L20 87 Z" fill="#F1C40F"/>
+            <path d="M145 88 L147 83 L149 88 L154 90 L149 92 L147 97 L145 92 L140 90 Z" fill="#F1C40F"/>
+          </svg>
+
+          <!-- Voice listening micro badge -->
+          <div id="listeningBadge" class="hidden absolute -bottom-1 left-1/2 transform -translate-x-1/2 bg-red-500 text-white text-[9px] px-2 py-0.5 rounded-full font-bold whitespace-nowrap shadow-sm flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
+            กำลังฟัง...
+          </div>
+        </div>
+
+        <!-- Speech / Encouragement Bubble -->
+        <div class="flex-1 bg-white p-3 rounded-2xl border border-sage-200 shadow-xs relative min-h-[92px] flex flex-col justify-center">
+          <div class="absolute -left-2 top-8 w-3 h-3 bg-white border-l border-b border-sage-200 rotate-45"></div>
+          
+          <div class="flex items-center justify-between text-xs text-warmOrange-500 font-semibold mb-1">
+            <span id="speechHeaderLabel">💰 น้องใจฟูสายเปย์บอกว่า:</span>
+            <!-- Audio wave animation -->
+            <div id="soundWaves" class="hidden flex items-end gap-1 h-4">
+              <span class="sound-bar w-1 bg-warmOrange-400 rounded-full"></span>
+              <span class="sound-bar w-1 bg-warmOrange-500 rounded-full"></span>
+              <span class="sound-bar w-1 bg-warmOrange-400 rounded-full"></span>
+              <span class="sound-bar w-1 bg-warmOrange-500 rounded-full"></span>
+              <span class="sound-bar w-1 bg-warmOrange-400 rounded-full"></span>
+            </div>
+          </div>
+          
+          <p id="mascotMessage" class="font-itim text-stone-700 text-sm leading-snug tracking-wide transition-all duration-300">
+            "แตะปุ่มไมค์สีส้มข้างล่าง แล้วพูดบันทึกได้เลยน้าคนเก่ง! วันนี้รวยๆ ใจฟู~ 💰"
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Balance & Finance Overview Cards -->
+    <section class="grid grid-cols-2 gap-3">
+      <!-- Total Balance (Span 2 cols) -->
+      <div class="col-span-2 bg-gradient-to-r from-sage-500 to-sage-600 rounded-3xl p-4 text-white shadow-cute flex items-center justify-between relative overflow-hidden">
+        <div class="relative z-10">
+          <div class="flex items-center gap-1.5 text-sage-100 text-xs font-medium mb-1">
+            <i data-lucide="wallet" class="w-4 h-4"></i>
+            <span>ยอดเงินคงเหลือ (กระเป๋าตังค์)</span>
+          </div>
+          <div class="text-2xl sm:text-3xl font-bold tracking-tight flex items-baseline gap-1">
+            <span id="totalBalanceText">฿0.00</span>
+          </div>
+          <span class="inline-block mt-1 text-[11px] bg-white/20 backdrop-blur-sm text-sage-50 px-2 py-0.5 rounded-full font-normal">
+            🌿 ใจฟูทุกครั้งที่มีเงินเก็บ
+          </span>
+        </div>
+        <div class="relative z-10 text-right flex flex-col gap-1.5">
+          <button onclick="openModal('expense')" class="bg-warmOrange-400 hover:bg-warmOrange-500 active:scale-95 text-white font-medium text-xs px-3.5 py-2 rounded-2xl shadow-bubble flex items-center gap-1.5 transition">
+            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+            <span>พิมพ์เอง</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Income Card (Sage Green Tone) -->
+      <div class="bg-white p-3.5 rounded-2xl border border-sage-200 shadow-sm flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-sage-100 flex items-center justify-center text-sage-600 flex-shrink-0">
+          <i data-lucide="arrow-down-left" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <p class="text-xs text-stone-400 font-medium">รายรับรวม</p>
+          <p id="totalIncomeText" class="text-base font-bold text-sage-600">฿0.00</p>
+        </div>
+      </div>
+
+      <!-- Expense Card (Warm Orange Tone) -->
+      <div class="bg-white p-3.5 rounded-2xl border border-warmOrange-200/80 shadow-sm flex items-center gap-3 bg-gradient-to-br from-white to-warmOrange-50/50">
+        <div class="w-10 h-10 rounded-2xl bg-warmOrange-100 flex items-center justify-center text-warmOrange-500 flex-shrink-0">
+          <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <p class="text-xs text-stone-400 font-medium">รายจ่ายรวม</p>
+          <p id="totalExpenseText" class="text-base font-bold text-warmOrange-500">฿0.00</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Graph / Expense Breakdown -->
+    <section class="bg-white p-4 rounded-3xl border border-sage-200 shadow-cute">
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center gap-2">
+          <span class="p-1.5 bg-warmOrange-100 text-warmOrange-500 rounded-xl">
+            <i data-lucide="pie-chart" class="w-4 h-4"></i>
+          </span>
+          <h2 class="font-bold text-stone-800 text-sm">สัดส่วนรายจ่าย (โทนสีส้ม)</h2>
+        </div>
+        <span class="text-[11px] font-medium text-stone-400">แยกตามหมวด</span>
+      </div>
+
+      <!-- Chart Canvas -->
+      <div class="relative w-full h-40 flex items-center justify-center">
+        <canvas id="expenseChart"></canvas>
+        <div id="chartPlaceholder" class="hidden absolute inset-0 flex flex-col items-center justify-center text-center p-4">
+          <span class="text-3xl mb-1">🍰</span>
+          <p class="text-xs text-stone-400">ยังไม่มีรายจ่ายเลยฮะ<br>เริ่มบันทึกเพื่อให้ใจฟูได้เลยน้า</p>
+        </div>
+      </div>
+
+      <!-- Category Chips -->
+      <div id="categoryBreakdown" class="flex flex-wrap gap-1.5 mt-2.5 pt-2 border-t border-sage-100 text-xs">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- Transaction List & Filter -->
+    <section class="flex flex-col gap-2.5">
+      <div class="flex items-center justify-between px-1">
+        <div class="flex items-center gap-2">
+          <span class="p-1.5 bg-sage-100 text-sage-600 rounded-xl">
+            <i data-lucide="receipt-text" class="w-4 h-4"></i>
+          </span>
+          <h2 class="font-bold text-stone-800 text-sm">ประวัติรายรับ-รายจ่าย</h2>
+        </div>
+        <!-- Filter Tabs -->
+        <div class="bg-sage-100/80 p-0.5 rounded-full flex text-xs">
+          <button onclick="setFilter('all')" id="filterAll" class="px-2.5 py-1 rounded-full font-medium transition bg-white shadow-xs text-stone-800">ทั้งหมด</button>
+          <button onclick="setFilter('expense')" id="filterExpense" class="px-2.5 py-1 rounded-full font-medium transition text-stone-500 hover:text-stone-700">จ่าย (ส้ม)</button>
+          <button onclick="setFilter('income')" id="filterIncome" class="px-2.5 py-1 rounded-full font-medium transition text-stone-500 hover:text-stone-700">รับ (เขียว)</button>
+        </div>
+      </div>
+
+      <!-- Transactions Grouped by Date -->
+      <div id="transactionList" class="flex flex-col gap-3 max-h-72 overflow-y-auto cute-scroll pr-0.5">
+        <!-- Dynamically rendered -->
+      </div>
+    </section>
+
+  </div>
+
+  <!-- FIXED BOTTOM DOCK: PROMINENT VOICE RECORDING + ACTION BAR -->
+  <div class="fixed bottom-3 left-0 right-0 max-w-md mx-auto px-4 z-30 pointer-events-none">
+    <div class="pointer-events-auto bg-white/95 backdrop-blur-md px-3 py-2.5 rounded-3xl shadow-cute border border-sage-200 flex items-center justify-between gap-2">
+      
+      <!-- Manual Add Income Button -->
+      <button onclick="openModal('income')" class="flex-1 py-2 rounded-2xl bg-sage-100 hover:bg-sage-200 active:scale-95 text-sage-700 text-xs font-semibold flex items-center justify-center gap-1.5 transition">
+        <i data-lucide="plus" class="w-4 h-4 text-sage-600"></i>
+        <span>+ รับ (เขียว)</span>
+      </button>
+
+      <!-- Center Big Cute Voice Recognition Mic Button -->
+      <div class="relative -top-3 flex flex-col items-center">
+        <button id="mainVoiceMicBtn" onclick="toggleSpeechRecording()" class="w-14 h-14 rounded-full bg-gradient-to-tr from-warmOrange-500 to-warmOrange-400 text-white flex items-center justify-center shadow-bubble active:scale-90 transition transform">
+          <i data-lucide="mic" id="micIcon" class="w-7 h-7"></i>
+        </button>
+        <span id="micLabel" class="text-[10px] font-bold text-warmOrange-500 mt-0.5 whitespace-nowrap bg-white/90 px-2 py-0.2 rounded-full border border-warmOrange-200">
+          แตะพูดเลย
+        </span>
+      </div>
+
+      <!-- Manual Add Expense Button -->
+      <button onclick="openModal('expense')" class="flex-1 py-2 rounded-2xl bg-warmOrange-100 hover:bg-warmOrange-200 active:scale-95 text-warmOrange-600 text-xs font-semibold flex items-center justify-center gap-1.5 transition">
+        <i data-lucide="minus" class="w-4 h-4 text-warmOrange-500"></i>
+        <span>- จ่าย (ส้ม)</span>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- VOICE RESULT CONFIRMATION POPUP (With Auto-Save Countdown) -->
+  <div id="voiceConfirmModal" class="fixed inset-0 bg-stone-900/50 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl border-2 border-warmOrange-200 modal-enter text-stone-800">
+      
+      <div class="flex items-center justify-between pb-2 border-b border-sage-100">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">🌱</span>
+          <div>
+            <h3 class="font-bold text-stone-800 text-sm">น้องใจฟูได้ยินว่า:</h3>
+            <p id="voiceRawSpeechText" class="text-xs text-warmOrange-600 font-semibold italic truncate max-w-[200px]">"..."</p>
+          </div>
+        </div>
+        <button onclick="cancelVoiceSave()" class="w-7 h-7 rounded-full bg-stone-100 text-stone-400 hover:text-stone-600 flex items-center justify-center transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Parsed Details Card -->
+      <div class="my-3.5 p-3 rounded-2xl border flex items-center justify-between" id="voiceParsedCard">
+        <div class="flex items-center gap-3">
+          <div id="voiceCategoryIconBox" class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl">
+            🍲
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span id="voiceTitleText" class="font-bold text-stone-800 text-sm">กินข้าว</span>
+              <span id="voiceCategoryBadge" class="text-[10px] px-2 py-0.5 rounded-full font-semibold">อาหาร</span>
+            </div>
+            <p id="voiceTypeText" class="text-xs text-stone-400">ประเภทรายจ่าย</p>
+          </div>
+        </div>
+        <div class="text-right">
+          <div id="voiceAmountText" class="text-lg font-bold text-warmOrange-500">฿0.00</div>
+          <span class="text-[10px] text-stone-400">วันนี้</span>
+        </div>
+      </div>
+
+      <!-- Auto save timer and action buttons -->
+      <div class="flex flex-col gap-2">
+        <button onclick="confirmVoiceSaveNow()" class="w-full py-2.5 rounded-2xl bg-warmOrange-400 hover:bg-warmOrange-500 text-white font-bold text-sm shadow-bubble flex items-center justify-center gap-2 active:scale-95 transition">
+          <i data-lucide="check-circle" class="w-4 h-4"></i>
+          <span>บันทึกทันที (<span id="voiceCountdown">3</span>วิ)</span>
+        </button>
+        <div class="flex gap-2">
+          <button onclick="editVoiceResultManually()" class="flex-1 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-600 text-xs font-medium transition">
+            ✏️ แก้ไขก่อน
+          </button>
+          <button onclick="cancelVoiceSave()" class="flex-1 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-500 text-xs font-medium transition">
+            ยกเลิก
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Manual Add / Edit Transaction Modal -->
+  <div id="transactionModal" class="fixed inset-0 bg-stone-900/40 backdrop-blur-xs z-50 hidden flex items-end sm:items-center justify-center p-3 sm:p-4">
+    <div class="bg-creamy w-full max-w-sm rounded-3xl p-5 shadow-2xl border border-sage-200 modal-enter">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-sage-100">
+        <div class="flex items-center gap-2">
+          <span class="text-xl" id="modalEmoji">📝</span>
+          <h3 class="font-bold text-stone-800 text-base" id="modalTitle">จดบันทึกให้ใจฟู</h3>
+        </div>
+        <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-sage-100 hover:bg-sage-200 text-stone-500 flex items-center justify-center transition">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Type Switcher -->
+      <div class="grid grid-cols-2 gap-2 mt-4 p-1 bg-sage-100/80 rounded-2xl">
+        <button type="button" id="tabExpense" onclick="setModalType('expense')" class="py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-warmOrange-400 text-white shadow-sm">
+          <span>💸 รายจ่าย (ส้ม)</span>
+        </button>
+        <button type="button" id="tabIncome" onclick="setModalType('income')" class="py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-stone-600">
+          <span>🌿 รายรับ (เขียว)</span>
+        </button>
+      </div>
+
+      <!-- Form Inputs -->
+      <form id="txForm" onsubmit="handleFormSubmit(event)" class="mt-4 flex flex-col gap-3">
+        <!-- Amount Input -->
+        <div>
+          <label class="block text-xs font-semibold text-stone-600 mb-1">จำนวนเงิน (บาท) *</label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 font-bold text-base">฿</span>
+            <input type="number" id="txAmount" step="any" required min="0.01" placeholder="0.00" class="w-full pl-9 pr-4 py-2 bg-white border border-sage-200 rounded-2xl text-stone-800 font-bold text-lg focus:outline-none focus:ring-2 focus:ring-warmOrange-300 transition" />
+          </div>
+        </div>
+
+        <!-- Category Selector -->
+        <div>
+          <label class="block text-xs font-semibold text-stone-600 mb-1">หมวดหมู่</label>
+          <div id="categoryPills" class="grid grid-cols-4 gap-2 max-h-28 overflow-y-auto cute-scroll p-1 bg-white/70 rounded-2xl border border-sage-200">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Note & Date -->
+        <div class="grid grid-cols-1 gap-2">
+          <div>
+            <label class="block text-xs font-semibold text-stone-600 mb-1">ชื่อรายการ / โน้ต</label>
+            <input type="text" id="txNote" placeholder="เช่น กาแฟลาเต้, ข้าวหมูกรอบ" maxlength="50" class="w-full px-3.5 py-2 bg-white border border-sage-200 rounded-xl text-xs text-stone-800 focus:outline-none focus:ring-2 focus:ring-warmOrange-300 transition" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-stone-600 mb-1">วันที่</label>
+            <input type="date" id="txDate" required class="w-full px-3.5 py-2 bg-white border border-sage-200 rounded-xl text-xs text-stone-700 focus:outline-none focus:ring-2 focus:ring-warmOrange-300 transition" />
+          </div>
+        </div>
+
+        <!-- Action Submit Button -->
+        <button type="submit" id="submitBtn" class="mt-1 w-full py-2.5 rounded-2xl bg-warmOrange-400 hover:bg-warmOrange-500 active:scale-95 text-white font-bold text-sm shadow-bubble transition flex items-center justify-center gap-2">
+          <i data-lucide="check" class="w-4 h-4"></i>
+          <span>บันทึกรายการ</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Custom Cute Toast / Notification -->
+  <div id="cuteToast" class="fixed top-5 z-50 transform -translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-2 bg-stone-800 text-white px-4 py-2.5 rounded-2xl shadow-lg text-xs font-medium">
+    <span id="toastIcon">✨</span>
+    <span id="toastMsg">บันทึกเรียบร้อยฮะ!</span>
+  </div>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    // Categories definition
+    const EXPENSE_CATEGORIES = [
+      { id: 'food', name: 'อาหาร', icon: '🍲', color: '#FF9F43', keywords: ['ข้าว', 'อาหาร', 'ก๋วยเตี๋ยว', 'กิน', 'ขนม', 'ชาบู', 'หมูกระทะ', 'ส้มตำ', 'พิซซ่า', 'เบอร์เกอร์', 'ข้าวมันไก่', 'ไก่ทอด', 'มื้อเย็น', 'มื้อเที่ยง', 'มื้อเช้า', 'บุฟเฟต์'] },
+      { id: 'drink', name: 'คาเฟ่/ชานม', icon: '🧋', color: '#FFB871', keywords: ['ชานม', 'ไข่มุก', 'กาแฟ', 'ชา', 'อเมซอน', 'สตาร์บัค', 'ลาเต้', 'คาปู', 'น้ำหวาน', 'ชาเขียว', 'โกโก้', 'สมูทตี้', 'น้ำเต้าหู้', 'เบียร์', 'เหล้า'] },
+      { id: 'shopping', name: 'ช้อปปิ้ง', icon: '🛍️', color: '#FF7675', keywords: ['เสื้อ', 'กางเกง', 'ซื้อ', 'ช้อปปิ้ง', 'รองเท้า', 'กระเป๋า', 'เครื่องสำอาง', 'ลิป', 'สกินแคร์', 'ของ', 'สั่งช้อปปี้', 'shopee', 'lazada', 'tiktok'] },
+      { id: 'travel', name: 'เดินทาง', icon: '🚖', color: '#F59E0B', keywords: ['รถไฟฟ้า', 'bts', 'mrt', 'ค่าน้ำมัน', 'เติมน้ำมัน', 'แท็กซี่', 'วิน', 'รถเมล์', 'ค่ารถ', 'แกร็บ', 'grab', 'ทางด่วน', 'ตั๋วเครื่องบิน', 'รถไฟ'] },
+      { id: 'bills', name: 'บิล/ของใช้', icon: '💡', color: '#D97706', keywords: ['ค่าเน็ต', 'ค่าน้ำ', 'ค่าไฟ', 'ค่าเช่า', 'ค่าห้อง', 'ของใช้', 'ทิชชู่', 'สบู่', 'ผงซักฟอก', 'ยาสีฟัน', 'ค่าโทรศัพท์', 'netflix', 'youtube', 'spotify'] },
+      { id: 'entertain', name: 'บันเทิง', icon: '🎬', color: '#F97316', keywords: ['ดูหนัง', 'ตั๋วหนัง', 'เที่ยว', 'เกม', 'เติมเกม', 'คอนเสิร์ต', 'คาราโอเกะ'] },
+      { id: 'health', name: 'สุขภาพ/ยา', icon: '💊', color: '#FB7185', keywords: ['ยา', 'หาหมอ', 'คลินิก', 'วิตามิน', 'ทำฟัน', 'โรงพยาบาล'] },
+      { id: 'other_exp', name: 'อื่นๆ', icon: '✨', color: '#78716C', keywords: [] }
+    ];
+
+    const INCOME_CATEGORIES = [
+      { id: 'salary', name: 'เงินเดือน', icon: '💼', color: '#5C9C82', keywords: ['เงินเดือน', 'เงินเดือนออก', 'เงินประจำ', 'เงินโอน'] },
+      { id: 'extra', name: 'รายได้เสริม', icon: '💻', color: '#74B49B', keywords: ['ขายของ', 'งานเสริม', 'ฟรีแลนซ์', 'รับจ้าง', 'สอนพิเศษ', 'คอมมิชชั่น', 'ออเดอร์'] },
+      { id: 'bonus', name: 'โบนัส/ของขวัญ', icon: '🎁', color: '#A7D7C5', keywords: ['โบนัส', 'ของขวัญ', 'แต๊ะเอีย', 'พ่อให้', 'แม่ให้', 'ถูกหวย', 'รางวัล', 'เงินคืน'] },
+      { id: 'invest', name: 'ลงทุน/ปันผล', icon: '📈', color: '#477C67', keywords: ['ปันผล', 'ดอกเบี้ย', 'ขายหุ้น', 'คริปโต', 'กำไร'] }
+    ];
+
+    // Mascot Messages & Quotes
+    const MASCOT_MESSAGES = [
+      "วันนี้เก่งมากเลยนะ! บันทึกวันละนิด รับรองเงินทองไหลมาเทมา~ 💰✨",
+      "แตะไมค์แล้วบอกน้องใจฟูได้เลยนะ เช่น 'กินข้าว 60 บาท' 🎙️",
+      "ยิ่งจดยิ่งรวย! น้องใจฟูกอดถุงทองแน่นมากกกก 🥰",
+      "ทุกบาทที่บันทึก คือความสุขที่เติบโตนะฮะ 🌱",
+      "น้องใจฟูฟังภาษาไทยเก่งมาก ลองคุยกับเค้าสิ! ✨",
+      "ส่งออกข้อมูลเป็น Excel ไปดูสรุปเงินล้านได้ทุกเมื่อเลยน้า 📊",
+      "ดื่มชานมได้ แต่ต้องจดด้วยน้า เดี๋ยวถุงทองจะแฟบ~ 🧋",
+      "มีเงินเก็บเยอะๆ จะได้พาใจฟูไปเที่ยวรอบโลกกัน! 🛫"
+    ];
+
+    // State Variables
+    let transactions = [];
+    let currentFilter = 'all';
+    let currentModalType = 'expense';
+    let selectedCategory = EXPENSE_CATEGORIES[0].id;
+    let chartInstance = null;
+    let isVoiceMuted = false;
+
+    // Speech Recognition variables
+    let recognition = null;
+    let isRecording = false;
+    let autoSaveTimer = null;
+    let pendingVoiceData = null;
+
+    // Load Data
+    function loadInitialData() {
+      const stored = localStorage.getItem('jaifoo_expenses');
+      if (stored) {
+        try {
+          transactions = JSON.parse(stored);
+        } catch (e) {
+          transactions = [];
+        }
+      } else {
+        const today = new Date().toISOString().split('T')[0];
+        const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+
+        transactions = [
+          { id: '1', type: 'income', amount: 28000, category: 'salary', note: 'เงินเดือนใจฟู', date: today },
+          { id: '2', type: 'expense', amount: 65, category: 'drink', note: 'ชาเขียวหวานน้อย', date: today },
+          { id: '3', type: 'expense', amount: 80, category: 'food', note: 'กินข้าวกะเพราไข่ดาว', date: today },
+          { id: '4', type: 'expense', amount: 45, category: 'travel', note: 'นั่งรถไฟฟ้าบีทีเอส', date: yesterday },
+          { id: '5', type: 'expense', amount: 350, category: 'shopping', note: 'ซื้อเสื้อยืดมินิมอล', date: yesterday }
+        ];
+        saveData();
+      }
+    }
+
+    function saveData() {
+      localStorage.setItem('jaifoo_expenses', JSON.stringify(transactions));
+    }
+
+    function resetDemoData() {
+      localStorage.removeItem('jaifoo_expenses');
+      loadInitialData();
+      renderApp();
+      showToast("รีเซ็ตข้อมูลตัวอย่างเรียบร้อยฮะ 🌱");
+      playCuteChime(440, 0.15);
+    }
+
+    function formatCurrency(num) {
+      return '฿' + Number(num).toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    // Audio SFX using Web Audio API (Synthesized Cute Chimes)
+    let audioCtx = null;
+    function playCuteChime(freq = 523.25, duration = 0.18, type = 'sine') {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(freq * 1.5, audioCtx.currentTime + duration);
+
+        gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (err) {
+        // audio context blocked or not supported
+      }
+    }
+
+    function playSuccessChime() {
+      playCuteChime(587.33, 0.12);
+      setTimeout(() => playCuteChime(880, 0.22), 110);
+    }
+
+    // Cute Speech Synthesis (น้องใจฟูพูดตอบรับ)
+    function speakJaiFooVoice(text) {
+      if (isVoiceMuted || !('speechSynthesis' in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = 'th-TH';
+        utter.rate = 1.05;
+        utter.pitch = 1.25;
+        window.speechSynthesis.speak(utter);
+      } catch (e) {
+        // fallback ignored
+      }
+    }
+
+    function toggleVoiceOutputMute() {
+      isVoiceMuted = !isVoiceMuted;
+      const icon = document.getElementById('muteIcon');
+      if (isVoiceMuted) {
+        icon.setAttribute('data-lucide', 'volume-x');
+        showToast("ปิดเสียงน้องใจฟูแล้วฮะ 🔇");
+      } else {
+        icon.setAttribute('data-lucide', 'volume-2');
+        showToast("เปิดเสียงน้องใจฟูแล้วนะฮะ 🔊");
+        playCuteChime(659.25, 0.15);
+      }
+      lucide.createIcons();
+    }
+
+    // SMART THAI PARSER LOGIC
+    function parseThaiVoiceCommand(sentence) {
+      const clean = sentence.trim().toLowerCase();
+      
+      // 1. Detect Amount
+      let amount = null;
+      const numberMatches = clean.match(/(\d+(?:\.\d+)?)/g);
+      if (numberMatches && numberMatches.length > 0) {
+        amount = parseFloat(numberMatches[numberMatches.length - 1]);
+      }
+
+      // 2. Detect Transaction Type
+      const incomeKeywords = [
+        'ได้เงิน', 'เงินเดือน', 'เงินเข้า', 'ขายของได้', 'โบนัส', 'แม่ให้', 'พ่อให้', 
+        'รายได้', 'กำไร', 'ถูกหวย', 'รับเงิน', 'ปันผล', 'จ้างงาน', 'ได้ค่า'
+      ];
+      const isIncome = incomeKeywords.some(keyword => clean.includes(keyword));
+      const type = isIncome ? 'income' : 'expense';
+
+      // 3. Match Category
+      let matchedCategory = type === 'expense' ? 'food' : 'salary';
+      const categoryPool = type === 'expense' ? EXPENSE_CATEGORIES : INCOME_CATEGORIES;
+
+      let highestScore = -1;
+      categoryPool.forEach(cat => {
+        cat.keywords.forEach(kw => {
+          if (clean.includes(kw) && kw.length > highestScore) {
+            highestScore = kw.length;
+            matchedCategory = cat.id;
+          }
+        });
+      });
+
+      // 4. Construct Title
+      let note = clean
+        .replace(/บาท|เหรียญ/g, '')
+        .replace(/\d+(?:\.\d+)?/g, '')
+        .trim();
+
+      if (!note || note.length < 2) {
+        const catObj = categoryPool.find(c => c.id === matchedCategory);
+        note = catObj ? catObj.name : (type === 'income' ? 'รายรับ' : 'รายจ่าย');
+      }
+
+      if (!amount || isNaN(amount)) {
+        amount = 50;
+      }
+
+      return {
+        type: type,
+        amount: amount,
+        category: matchedCategory,
+        note: note.charAt(0).toUpperCase() + note.slice(1),
+        raw: sentence
+      };
+    }
+
+    // INITIALIZE WEB SPEECH API
+    function setupSpeechRecognition() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        return null;
+      }
+
+      const recog = new SpeechRecognition();
+      recog.lang = 'th-TH';
+      recog.continuous = false;
+      recog.interimResults = false;
+      recog.maxAlternatives = 1;
+
+      recog.onstart = function() {
+        isRecording = true;
+        setMicUI(true);
+        playCuteChime(520, 0.1);
+        document.getElementById('mascotMessage').innerText = '"น้องใจฟูกำลังตั้งใจฟังอยู่น้า... พูดเลยฮะ!"';
+      };
+
+      recog.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        handleVoiceSuccess(transcript);
+      };
+
+      recog.onerror = function(event) {
+        setMicUI(false);
+        isRecording = false;
+        if (event.error === 'no-speech') {
+          showToast("ไม่ได้ยินเสียงเลย ลองพูดใหม่อีกครั้งน้า 🎤", "🤔");
+        } else if (event.error === 'not-allowed') {
+          showToast("กรุณากดอนุญาตให้ใช้งานไมโครโฟนนะฮะ 🙏", "⚠️");
+        } else {
+          showToast("เกิดข้อผิดพลาดในการฟังเสียงฮะ", "🍂");
+        }
+      };
+
+      recog.onend = function() {
+        setMicUI(false);
+        isRecording = false;
+      };
+
+      return recog;
+    }
+
+    function toggleSpeechRecording() {
+      if (!recognition) {
+        recognition = setupSpeechRecognition();
+      }
+
+      if (!recognition) {
+        const sample = prompt("เบราว์เซอร์นี้ยังไม่รองรับระบบเสียงโดยตรงฮะ พิมพ์จำลองข้อความพูดได้เลย เช่น 'กินชาบู 299'", "กินชานมไข่มุก 60 บาท");
+        if (sample) handleVoiceSuccess(sample);
+        return;
+      }
+
+      if (isRecording) {
+        recognition.stop();
+        setMicUI(false);
+      } else {
+        try {
+          recognition.start();
+        } catch (e) {
+          recognition.stop();
+        }
+      }
+    }
+
+    function setMicUI(active) {
+      const micBtn = document.getElementById('mainVoiceMicBtn');
+      const micLabel = document.getElementById('micLabel');
+      const mascot = document.getElementById('mascotWrapper');
+      const sprout = document.getElementById('mascotSprout');
+      const soundWaves = document.getElementById('soundWaves');
+      const listeningBadge = document.getElementById('listeningBadge');
+
+      if (active) {
+        micBtn.classList.add('mic-recording');
+        micLabel.innerText = "กำลังฟัง...";
+        micLabel.className = "text-[10px] font-bold text-red-500 mt-0.5 whitespace-nowrap bg-white px-2 py-0.2 rounded-full border border-red-200 animate-pulse";
+        mascot.classList.add('mascot-listening');
+        sprout.classList.add('sprout-hyper');
+        soundWaves.classList.remove('hidden');
+        listeningBadge.classList.remove('hidden');
+      } else {
+        micBtn.classList.remove('mic-recording');
+        micLabel.innerText = "แตะพูดเลย";
+        micLabel.className = "text-[10px] font-bold text-warmOrange-500 mt-0.5 whitespace-nowrap bg-white/90 px-2 py-0.2 rounded-full border border-warmOrange-200";
+        mascot.classList.remove('mascot-listening');
+        sprout.classList.remove('sprout-hyper');
+        soundWaves.classList.add('hidden');
+        listeningBadge.classList.add('hidden');
+      }
+    }
+
+    function simulateVoiceTest() {
+      const samples = [
+        "กินข้าว 60 บาท",
+        "ซื้อชาไข่มุก 45",
+        "ได้เงินเดือน 30000 บาท",
+        "จ่ายค่าเน็ต 500",
+        "ขายของได้ 1200 บาท",
+        "ค่ารถไฟฟ้า 40 บาท",
+        "ซื้อเสื้อผ้า 350 บาท"
+      ];
+      const randomText = samples[Math.floor(Math.random() * samples.length)];
+      handleVoiceSuccess(randomText);
+    }
+
+    function handleVoiceSuccess(rawTranscript) {
+      playCuteChime(784, 0.14);
+      const parsed = parseThaiVoiceCommand(rawTranscript);
+      pendingVoiceData = parsed;
+
+      document.getElementById('voiceRawSpeechText').innerText = `"${rawTranscript}"`;
+      document.getElementById('voiceTitleText').innerText = parsed.note;
+      
+      const isExp = parsed.type === 'expense';
+      const allCats = [...EXPENSE_CATEGORIES, ...INCOME_CATEGORIES];
+      const catObj = allCats.find(c => c.id === parsed.category) || { name: 'ทั่วไป', icon: '📝', color: '#FF9F43' };
+
+      const iconBox = document.getElementById('voiceCategoryIconBox');
+      const badge = document.getElementById('voiceCategoryBadge');
+      const amountEl = document.getElementById('voiceAmountText');
+      const typeEl = document.getElementById('voiceTypeText');
+      const parsedCard = document.getElementById('voiceParsedCard');
+
+      iconBox.innerText = catObj.icon;
+      badge.innerText = catObj.name;
+      amountEl.innerText = formatCurrency(parsed.amount);
+
+      if (isExp) {
+        iconBox.className = "w-12 h-12 rounded-2xl flex items-center justify-center text-2xl bg-warmOrange-100 text-warmOrange-600";
+        badge.className = "text-[10px] px-2 py-0.5 rounded-full font-semibold bg-warmOrange-100 text-warmOrange-700";
+        amountEl.className = "text-lg font-bold text-warmOrange-500";
+        typeEl.innerText = "ประเภทรายจ่าย (ส้ม)";
+        parsedCard.className = "my-3.5 p-3 rounded-2xl border border-warmOrange-200 bg-warmOrange-50/40 flex items-center justify-between";
+      } else {
+        iconBox.className = "w-12 h-12 rounded-2xl flex items-center justify-center text-2xl bg-sage-100 text-sage-600";
+        badge.className = "text-[10px] px-2 py-0.5 rounded-full font-semibold bg-sage-100 text-sage-700";
+        amountEl.className = "text-lg font-bold text-sage-600";
+        typeEl.innerText = "ประเภทรายรับ (เขียว)";
+        parsedCard.className = "my-3.5 p-3 rounded-2xl border border-sage-200 bg-sage-50/40 flex items-center justify-between";
+      }
+
+      document.getElementById('voiceConfirmModal').classList.remove('hidden');
+      startAutoSaveCountdown();
+    }
+
+    function startAutoSaveCountdown() {
+      let secondsLeft = 3;
+      const countEl = document.getElementById('voiceCountdown');
+      countEl.innerText = secondsLeft;
+
+      if (autoSaveTimer) clearInterval(autoSaveTimer);
+
+      autoSaveTimer = setInterval(() => {
+        secondsLeft -= 1;
+        countEl.innerText = secondsLeft;
+        if (secondsLeft <= 0) {
+          clearInterval(autoSaveTimer);
+          confirmVoiceSaveNow();
+        }
+      }, 1000);
+    }
+
+    function confirmVoiceSaveNow() {
+      if (autoSaveTimer) clearInterval(autoSaveTimer);
+      if (!pendingVoiceData) return;
+
+      const todayStr = new Date().toISOString().split('T')[0];
+      const newTx = {
+        id: Date.now().toString(),
+        type: pendingVoiceData.type,
+        amount: pendingVoiceData.amount,
+        category: pendingVoiceData.category,
+        note: pendingVoiceData.note,
+        date: todayStr
+      };
+
+      transactions.unshift(newTx);
+      saveData();
+      document.getElementById('voiceConfirmModal').classList.add('hidden');
+      
+      renderApp();
+      playSuccessChime();
+
+      const voiceFeedbackMsg = pendingVoiceData.type === 'expense' 
+        ? `บันทึกรายจ่าย ${pendingVoiceData.note} ${pendingVoiceData.amount} บาท เรียบร้อยแล้วจ้า`
+        : `บันทึกรายรับ ${pendingVoiceData.note} ${pendingVoiceData.amount} บาท ยอดเงินใจฟูเลย!`;
+      
+      speakJaiFooVoice(voiceFeedbackMsg);
+      showToast(`บันทึก: ${pendingVoiceData.note} ฿${pendingVoiceData.amount.toLocaleString()} สำเร็จแล้วฮะ 🧡`, '🎉');
+
+      document.getElementById('mascotMessage').innerText = `"${voiceFeedbackMsg} 🌱"`;
+      pendingVoiceData = null;
+    }
+
+    function cancelVoiceSave() {
+      if (autoSaveTimer) clearInterval(autoSaveTimer);
+      document.getElementById('voiceConfirmModal').classList.add('hidden');
+      pendingVoiceData = null;
+      showToast("ยกเลิกการบันทึกแล้วฮะ", "🍃");
+    }
+
+    function editVoiceResultManually() {
+      if (autoSaveTimer) clearInterval(autoSaveTimer);
+      document.getElementById('voiceConfirmModal').classList.add('hidden');
+      if (!pendingVoiceData) return;
+
+      openModal(pendingVoiceData.type);
+      document.getElementById('txAmount').value = pendingVoiceData.amount;
+      document.getElementById('txNote').value = pendingVoiceData.note;
+      selectCategory(pendingVoiceData.category);
+    }
+
+    function pokeMascot() {
+      const wrapper = document.getElementById('mascotWrapper');
+      wrapper.classList.remove('mascot-bounce');
+      void wrapper.offsetWidth;
+      wrapper.classList.add('mascot-bounce');
+      playCuteChime(659, 0.12);
+
+      const randomMsg = MASCOT_MESSAGES[Math.floor(Math.random() * MASCOT_MESSAGES.length)];
+      const msgEl = document.getElementById('mascotMessage');
+      msgEl.style.opacity = '0';
+      setTimeout(() => {
+        msgEl.innerText = `"${randomMsg}"`;
+        msgEl.style.opacity = '1';
+      }, 150);
+      showToast("น้องใจฟูยิ้มแก้มปริเลยฮะ! 🥰");
+    }
+
+    function showToast(text, icon = "🌱") {
+      const toast = document.getElementById('cuteToast');
+      document.getElementById('toastMsg').innerText = text;
+      document.getElementById('toastIcon').innerText = icon;
+      toast.classList.remove('opacity-0', '-translate-y-20');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', '-translate-y-20');
+      }, 2500);
+    }
+
+    // EXPORT TO EXCEL (.xlsx) FUNCTION
+    function exportToExcel() {
+      if (!transactions || transactions.length === 0) {
+        showToast("ยังไม่มีรายการให้ส่งออกเลยฮะ ลองเพิ่มรายการก่อนน้า 🍃", "⚠️");
+        return;
+      }
+
+      try {
+        const allCats = [...EXPENSE_CATEGORIES, ...INCOME_CATEGORIES];
+
+        const exportData = transactions.map((item, index) => {
+          const cat = allCats.find(c => c.id === item.category) || { name: 'อื่นๆ' };
+          const isExp = item.type === 'expense';
+          return {
+            'ลำดับ': index + 1,
+            'วันที่': item.date,
+            'ประเภท': isExp ? 'รายจ่าย (Expense)' : 'รายรับ (Income)',
+            'หมวดหมู่': cat.name,
+            'ชื่อรายการ/บันทึก': item.note || '-',
+            'จำนวนเงิน (บาท)': Number(item.amount)
+          };
+        });
+
+        let totalIncome = 0;
+        let totalExpense = 0;
+        transactions.forEach(t => {
+          if (t.type === 'income') totalIncome += Number(t.amount);
+          if (t.type === 'expense') totalExpense += Number(t.amount);
+        });
+        const balance = totalIncome - totalExpense;
+
+        const summaryData = [
+          { 'หัวข้อสรุป': 'ยอดรายรับรวมทั้งหมด (บาท)', 'จำนวนเงิน': totalIncome },
+          { 'หัวข้อสรุป': 'ยอดรายจ่ายรวมทั้งหมด (บาท)', 'จำนวนเงิน': totalExpense },
+          { 'หัวข้อสรุป': 'ยอดเงินคงเหลือสุทธิ (บาท)', 'จำนวนเงิน': balance },
+          { 'หัวข้อสรุป': 'จำนวนรายการทั้งหมด', 'จำนวนเงิน': transactions.length },
+          { 'หัวข้อสรุป': 'วันที่ส่งออกข้อมูล', 'จำนวนเงิน': new Date().toLocaleDateString('th-TH') }
+        ];
+
+        const wb = XLSX.utils.book_new();
+
+        const wsTransactions = XLSX.utils.json_to_sheet(exportData);
+        wsTransactions['!cols'] = [
+          { wch: 8 },
+          { wch: 14 },
+          { wch: 22 },
+          { wch: 16 },
+          { wch: 26 },
+          { wch: 18 }
+        ];
+        XLSX.utils.book_append_sheet(wb, wsTransactions, "รายการรายรับรายจ่าย");
+
+        const wsSummary = XLSX.utils.json_to_sheet(summaryData);
+        wsSummary['!cols'] = [
+          { wch: 30 },
+          { wch: 20 }
+        ];
+        XLSX.utils.book_append_sheet(wb, wsSummary, "สรุปภาพรวมการเงิน");
+
+        const todayStr = new Date().toISOString().split('T')[0];
+        const filename = `JaiFoo_Expense_Report_${todayStr}.xlsx`;
+
+        XLSX.writeFile(wb, filename);
+
+        playSuccessChime();
+        showToast("ดาวน์โหลดไฟล์ Excel เรียบร้อยแล้วฮะ! 📊💰", "✨");
+        speakJaiFooVoice("ดาวน์โหลดไฟล์เอ็กเซลเรียบร้อยแล้วจ้า มั่งคั่งร่ำรวยนะฮะ");
+      } catch (err) {
+        console.error(err);
+        showToast("เกิดข้อผิดพลาดในการสร้างไฟล์ Excel ฮะ", "❌");
+      }
+    }
+
+    function setFilter(type) {
+      currentFilter = type;
+      ['All', 'Expense', 'Income'].forEach(t => {
+        const btn = document.getElementById(`filter${t}`);
+        if (t.toLowerCase() === type) {
+          btn.className = "px-2.5 py-1 rounded-full font-medium transition bg-white shadow-xs text-stone-800";
+        } else {
+          btn.className = "px-2.5 py-1 rounded-full font-medium transition text-stone-500 hover:text-stone-700";
+        }
+      });
+      renderTransactionList();
+    }
+
+    function formatGroupDate(dateStr) {
+      const d = new Date(dateStr);
+      const today = new Date().toISOString().split('T')[0];
+      const yesterdayDate = new Date(Date.now() - 86400000);
+      const yesterday = yesterdayDate.toISOString().split('T')[0];
+
+      if (dateStr === today) return "วันนี้";
+      if (dateStr === yesterday) return "เมื่อวานนี้";
+
+      const months = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+      return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear() + 543}`;
+    }
+
+    function renderTransactionList() {
+      const container = document.getElementById('transactionList');
+      container.innerHTML = '';
+
+      let filtered = transactions;
+      if (currentFilter === 'expense') filtered = transactions.filter(t => t.type === 'expense');
+      if (currentFilter === 'income') filtered = transactions.filter(t => t.type === 'income');
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white rounded-2xl p-6 text-center border border-sage-200 text-stone-400">
+            <span class="text-3xl">🍃</span>
+            <p class="text-xs mt-1">ยังไม่มีรายการในหมวดนี้ฮะ</p>
+          </div>
+        `;
+        return;
+      }
+
+      const grouped = {};
+      const sorted = [...filtered].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      sorted.forEach(item => {
+        if (!grouped[item.date]) grouped[item.date] = [];
+        grouped[item.date].push(item);
+      });
+
+      Object.keys(grouped).forEach(dateKey => {
+        const groupWrapper = document.createElement('div');
+        groupWrapper.className = "flex flex-col gap-1.5";
+
+        const dateHeader = document.createElement('div');
+        dateHeader.className = "text-[11px] font-semibold text-stone-400 px-2 flex items-center justify-between";
+        dateHeader.innerHTML = `
+          <span>📅 ${formatGroupDate(dateKey)}</span>
+          <span class="text-[10px] text-stone-300">${dateKey}</span>
+        `;
+        groupWrapper.appendChild(dateHeader);
+
+        grouped[dateKey].forEach(item => {
+          const allCats = [...EXPENSE_CATEGORIES, ...INCOME_CATEGORIES];
+          const cat = allCats.find(c => c.id === item.category) || { name: 'อื่นๆ', icon: '📝', color: '#9CA3AF' };
+          const isExp = item.type === 'expense';
+
+          const row = document.createElement('div');
+          row.className = "bg-white p-3 rounded-2xl border border-sage-100 flex items-center justify-between shadow-xs hover:border-sage-300 transition";
+          row.innerHTML = `
+            <div class="flex items-center gap-2.5">
+              <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-lg ${isExp ? 'bg-warmOrange-100/70' : 'bg-sage-100'}">
+                <span>${cat.icon}</span>
+              </div>
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-xs font-bold text-stone-700">${item.note || cat.name}</span>
+                  <span class="text-[10px] px-1.5 py-0.2 rounded-md ${isExp ? 'bg-warmOrange-50 text-warmOrange-600' : 'bg-sage-50 text-sage-600'}">${cat.name}</span>
+                </div>
+                <p class="text-[10px] text-stone-400">${item.type === 'expense' ? 'รายจ่าย' : 'รายรับ'}</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-bold ${isExp ? 'text-warmOrange-500' : 'text-sage-600'}">
+                ${isExp ? '-' : '+'}${Number(item.amount).toLocaleString('th-TH', { minimumFractionDigits: 2 })}
+              </span>
+              <button onclick="deleteTransaction('${item.id}')" title="ลบรายการ" class="text-stone-300 hover:text-red-400 p-1 rounded-lg transition">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          `;
+          groupWrapper.appendChild(row);
+        });
+
+        container.appendChild(groupWrapper);
+      });
+
+      lucide.createIcons();
+    }
+
+    function deleteTransaction(id) {
+      transactions = transactions.filter(t => t.id !== id);
+      saveData();
+      renderApp();
+      showToast("ลบรายการแล้วน้า ✨");
+    }
+
+    function openModal(type = 'expense') {
+      const modal = document.getElementById('transactionModal');
+      document.getElementById('txDate').value = new Date().toISOString().split('T')[0];
+      document.getElementById('txAmount').value = '';
+      document.getElementById('txNote').value = '';
+      setModalType(type);
+      modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('transactionModal').classList.add('hidden');
+    }
+
+    function setModalType(type) {
+      currentModalType = type;
+      const tabExp = document.getElementById('tabExpense');
+      const tabInc = document.getElementById('tabIncome');
+      const submitBtn = document.getElementById('submitBtn');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalEmoji = document.getElementById('modalEmoji');
+
+      if (type === 'expense') {
+        tabExp.className = "py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-warmOrange-400 text-white shadow-sm";
+        tabInc.className = "py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-stone-600";
+        submitBtn.className = "mt-2 w-full py-2.5 rounded-2xl bg-warmOrange-400 hover:bg-warmOrange-500 active:scale-95 text-white font-bold text-sm shadow-bubble transition flex items-center justify-center gap-2";
+        modalTitle.innerText = "จดรายจ่าย (โทนสีส้ม)";
+        modalEmoji.innerText = "💸";
+      } else {
+        tabInc.className = "py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 bg-sage-500 text-white shadow-sm";
+        tabExp.className = "py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 text-stone-600";
+        submitBtn.className = "mt-2 w-full py-2.5 rounded-2xl bg-sage-500 hover:bg-sage-600 active:scale-95 text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2";
+        modalTitle.innerText = "จดรายรับ (โทนสีเขียว)";
+        modalEmoji.innerText = "🌱";
+      }
+
+      renderCategoryPills();
+    }
+
+    function renderCategoryPills() {
+      const container = document.getElementById('categoryPills');
+      container.innerHTML = '';
+      const list = currentModalType === 'expense' ? EXPENSE_CATEGORIES : INCOME_CATEGORIES;
+      if (!list.some(c => c.id === selectedCategory)) {
+        selectedCategory = list[0].id;
+      }
+
+      list.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.id = `cat-${cat.id}`;
+        btn.onclick = () => selectCategory(cat.id);
+        const isSelected = cat.id === selectedCategory;
+
+        btn.className = `p-2 rounded-xl flex flex-col items-center justify-center text-center transition border ${
+          isSelected 
+            ? 'bg-warmOrange-100 border-warmOrange-400 text-warmOrange-800 font-bold scale-95' 
+            : 'bg-white border-stone-200 text-stone-600 hover:bg-stone-50'
+        }`;
+        btn.innerHTML = `
+          <span class="text-base">${cat.icon}</span>
+          <span class="text-[10px] mt-0.5 line-clamp-1">${cat.name}</span>
+        `;
+        container.appendChild(btn);
+      });
+    }
+
+    function selectCategory(id) {
+      selectedCategory = id;
+      const list = currentModalType === 'expense' ? EXPENSE_CATEGORIES : INCOME_CATEGORIES;
+      list.forEach(cat => {
+        const el = document.getElementById(`cat-${cat.id}`);
+        if (!el) return;
+        if (cat.id === id) {
+          const activeBg = currentModalType === 'expense' ? 'bg-warmOrange-100 border-warmOrange-400 text-warmOrange-800' : 'bg-sage-100 border-sage-500 text-sage-800';
+          el.className = `p-2 rounded-xl flex flex-col items-center justify-center text-center transition border scale-95 font-bold ${activeBg}`;
+        } else {
+          el.className = "p-2 rounded-xl flex flex-col items-center justify-center text-center transition border bg-white border-stone-200 text-stone-600 hover:bg-stone-50";
+        }
+      });
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const amount = parseFloat(document.getElementById('txAmount').value);
+      const note = document.getElementById('txNote').value.trim();
+      const date = document.getElementById('txDate').value;
+
+      if (!amount || amount <= 0) return;
+
+      const newTx = {
+        id: Date.now().toString(),
+        type: currentModalType,
+        amount: amount,
+        category: selectedCategory,
+        note: note || (currentModalType === 'expense' ? 'รายจ่ายทั่วไป' : 'รายรับทั่วไป'),
+        date: date
+      };
+
+      transactions.unshift(newTx);
+      saveData();
+      closeModal();
+      renderApp();
+      playSuccessChime();
+
+      showToast(`บันทึก ${newTx.note} ฿${amount.toLocaleString()} แล้วฮะ 🧡`, '✨');
+    }
+
+    function updateCalculations() {
+      let income = 0;
+      let expense = 0;
+
+      transactions.forEach(t => {
+        if (t.type === 'income') income += Number(t.amount);
+        if (t.type === 'expense') expense += Number(t.amount);
+      });
+
+      const balance = income - expense;
+
+      document.getElementById('totalBalanceText').innerText = formatCurrency(balance);
+      document.getElementById('totalIncomeText').innerText = formatCurrency(income);
+      document.getElementById('totalExpenseText').innerText = formatCurrency(expense);
+    }
+
+    function renderChart() {
+      const ctx = document.getElementById('expenseChart').getContext('2d');
+      const placeholder = document.getElementById('chartPlaceholder');
+      const breakdownEl = document.getElementById('categoryBreakdown');
+      breakdownEl.innerHTML = '';
+
+      const expMap = {};
+      transactions.filter(t => t.type === 'expense').forEach(t => {
+        expMap[t.category] = (expMap[t.category] || 0) + Number(t.amount);
+      });
+
+      const catKeys = Object.keys(expMap);
+
+      if (catKeys.length === 0) {
+        if (chartInstance) chartInstance.destroy();
+        ctx.canvas.style.display = 'none';
+        placeholder.classList.remove('hidden');
+        return;
+      }
+
+      ctx.canvas.style.display = 'block';
+      placeholder.classList.add('hidden');
+
+      const labels = [];
+      const data = [];
+      const bgColors = [];
+
+      catKeys.forEach(k => {
+        const found = EXPENSE_CATEGORIES.find(c => c.id === k) || { name: 'อื่นๆ', icon: '✨', color: '#CBD5E1' };
+        labels.push(`${found.icon} ${found.name}`);
+        data.push(expMap[k]);
+        bgColors.push(found.color);
+
+        const chip = document.createElement('div');
+        chip.className = "flex items-center gap-1 bg-warmOrange-50 text-warmOrange-700 px-2.5 py-1 rounded-full text-[11px] font-medium border border-warmOrange-100";
+        chip.innerHTML = `<span>${found.icon}</span> <span>${found.name}: ฿${expMap[k].toLocaleString()}</span>`;
+        breakdownEl.appendChild(chip);
+      });
+
+      if (chartInstance) chartInstance.destroy();
+
+      chartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: data,
+            backgroundColor: bgColors,
+            borderColor: '#FFFFFF',
+            borderWidth: 3,
+            hoverOffset: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: {
+                boxWidth: 10,
+                font: { family: 'Prompt', size: 10 },
+                color: '#44403C'
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return ` ฿${Number(context.raw).toLocaleString()} บาท`;
+                }
+              }
+            }
+          },
+          cutout: '62%'
+        }
+      });
+    }
+
+    function renderApp() {
+      updateCalculations();
+      renderChart();
+      renderTransactionList();
+      lucide.createIcons();
+    }
+
+    window.onload = function() {
+      loadInitialData();
+      renderApp();
+      lucide.createIcons();
+    };
+  </script>
+</body>
+</html>
